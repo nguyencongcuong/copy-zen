@@ -1,5 +1,6 @@
 import {contextBridge, ipcRenderer} from 'electron'
 
 contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer: ipcRenderer
+  listen: (channel: string, callback: any) => ipcRenderer.on(channel, callback)
+
 });
