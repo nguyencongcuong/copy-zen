@@ -1,6 +1,6 @@
 import {app, BrowserWindow, clipboard} from 'electron'
 import path from 'node:path'
-import installExtension, {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from 'electron-devtools-installer';
+import installExtension, {REACT_DEVELOPER_TOOLS} from 'electron-devtools-installer';
 
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
@@ -42,6 +42,7 @@ function createWindow() {
     if (clipboardText !== previousClipboardText) {
       if (win) win.webContents.send('clipboard-updated', clipboardText);
       previousClipboardText = clipboardText;
+      console.log('CLIPBOARD: ', clipboardText)
     }
   }, 1000); // Adjust the interval as needed
 }
@@ -52,6 +53,9 @@ app.on('window-all-closed', () => {
 
 app.whenReady().then(() => {
   createWindow();
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
 }).then(() => {
   installExtension(REACT_DEVELOPER_TOOLS)
     .then((name) => console.log(`Added Extension:  ${name}`))
