@@ -1,5 +1,6 @@
 import {app, BrowserWindow, clipboard} from 'electron'
 import path from 'node:path'
+import installExtension, {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from 'electron-devtools-installer';
 
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
@@ -15,8 +16,11 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
+      devTools: true,
     },
-    fullscreen: false,
+    titleBarOverlay: true,
+    width: 500,
+    height: 800
   })
 
   // Test active push message to Renderer-process.
@@ -46,4 +50,10 @@ app.on('window-all-closed', () => {
   win = null
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow();
+}).then(() => {
+  installExtension(REACT_DEVELOPER_TOOLS)
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log('An error occurred: ', err));
+})
