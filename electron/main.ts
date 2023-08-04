@@ -1,15 +1,6 @@
 import {app, BrowserWindow, clipboard} from 'electron'
 import path from 'node:path'
 
-// The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
-// │ │ ├── main.js
-// │ │ └── preload.js
-// │
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
@@ -24,8 +15,6 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
-      devTools: true,
-      defaultEncoding: 'utf-8',
     },
     fullscreen: false,
   })
@@ -46,9 +35,8 @@ function createWindow() {
 
   setInterval(() => {
     const clipboardText = clipboard.readText();
-    console.log('clipboard text: ', clipboardText)
     if (clipboardText !== previousClipboardText) {
-      if(win) win.webContents.send('clipboard-updated', clipboardText);
+      if (win) win.webContents.send('clipboard-updated', clipboardText);
       previousClipboardText = clipboardText;
     }
   }, 1000); // Adjust the interval as needed

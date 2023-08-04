@@ -1,4 +1,4 @@
-import {clipboard, contextBridge} from "electron";
+import  { contextBridge, ipcRenderer } from 'electron'
 
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise(resolve => {
@@ -91,6 +91,8 @@ window.onmessage = ev => {
   ev.data.payload === 'removeLoading' && removeLoading()
 }
 
-
+contextBridge.exposeInMainWorld('electron', {
+    ipcRenderer: ipcRenderer
+});
 
 setTimeout(removeLoading, 4999)

@@ -1,27 +1,16 @@
 import {useEffect, useState} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/electron-vite.animate.svg'
-import './App.css'
+import './App.css';
 
 function App() {
   const [count, setCount] = useState(0);
-  const [texts, setTexts] = useState<string[]>([]);
+  const [text, setCopiedText] = useState<string>('');
 
-  useEffect(() => {
-    setTexts([]);
-  }, []);
   return (
     <>
       <div className={'wrapper'}>
-        <li>
-          {
-            texts.map((text) => {
-              return (
-                <ul key={text}>{text}</ul>
-              )
-            })
-          }
-        </li>
+        <div>{text}</div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo"/>
         </a>
