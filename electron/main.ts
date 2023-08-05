@@ -112,7 +112,7 @@ app
     const about = new MenuItem({
       label: "About",
       submenu: Menu.buildFromTemplate([
-        new MenuItem({ label: "Application: Copy Zen v1.0.0", enabled: false }),
+        new MenuItem({ label: "Application: Copy Zen", enabled: false }),
         new MenuItem({ label: "Version: v1.0.0", enabled: false }),
         new MenuItem({ label: "Author: Nguyen Cong Cuong", enabled: false }),
         new MenuItem({ label: "Email: hi@cuongnc.dev", enabled: false }),
