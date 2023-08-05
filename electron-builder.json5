@@ -8,6 +8,7 @@
   "directories": {
     "output": "release/${version}"
   },
+  "productName": "Copy Zen",
   "files": [
     "dist-electron",
     "dist"
