@@ -4,6 +4,7 @@ import {
   clipboard,
   ipcMain,
   Menu,
+  MenuItem,
   nativeImage,
   Tray,
 } from "electron";
@@ -31,8 +32,9 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: true,
     },
-    width: 600,
-    height: 900,
+    width: 0,
+    height: 0,
+    titleBarStyle: "hidden",
   });
 
   // Test active push message to Renderer-process.
@@ -86,22 +88,49 @@ app
     tray = new Tray(icon);
     tray.setToolTip("Clippy");
 
+    // Create default menu items
+    const hint1 = new MenuItem({
+      label: "Select the clip you would like to copy",
+      enabled: false,
+    });
+    const hint2 = new MenuItem({
+      label: "Your clippings will appear here...",
+      enabled: false,
+    });
+    const quit = new MenuItem({
+      label: "Quit",
+      click: app.quit,
+    });
+    const separator = new MenuItem({
+      type: "separator",
+    });
+    const clear = new MenuItem({
+      label: "Clear",
+      click: () => win?.webContents.send(CHANNEL.CLIPBOARD_CLEARED),
+    });
+
     // Initialize Tray with stored clipboard from bear store. Run on app start.
     ipcMain.on(CHANNEL.TRAY_INITIALIZATION, (_event, clips: Clip[]) => {
-      const menuItems = clips.map((clip) => {
-        return {
+      const clipItems = clips.map((clip) => {
+        return new MenuItem({
           id: clip.id,
           label:
             clip.content.length >= 50
               ? clip.content.slice(0, 50).trim() + "..."
               : clip.content,
-          click: () => {
-            clipboard.writeText(clip.content.trim());
-          },
-        };
+          click: () => clipboard.writeText(clip.content.trim()),
+        });
       });
 
-      menu = Menu.buildFromTemplate(menuItems);
+      menu = Menu.buildFromTemplate([
+        clipItems.length ? hint1 : hint2,
+        separator,
+        ...clipItems,
+        separator,
+        clear,
+        separator,
+        quit,
+      ]);
       tray.setContextMenu(menu);
     });
   });

@@ -44,8 +44,8 @@ export function Clipboard(props: ClipboardProps) {
 }
 
 export function Clipboards() {
-  const [clips, addClip, maxClips] = useBearStore(
-    (state) => [state.clips, state.addClip, state.maxClips],
+  const [clips, addClip, resetClips, maxClips] = useBearStore(
+    (state) => [state.clips, state.addClip, state.resetClips, state.maxClips],
     shallow,
   );
 
@@ -58,6 +58,12 @@ export function Clipboards() {
         addClip(message, maxClips);
       },
     );
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window["electron"].listen(CHANNEL.CLIPBOARD_CLEARED, () => {
+      resetClips();
+    });
   }, []);
 
   useEffect(() => {
@@ -66,13 +72,5 @@ export function Clipboards() {
     window["electron"].initializeTray(clips);
   }, [clips]);
 
-  return (
-    <>
-      <Stack direction={"column"} gap={1}>
-        {clips.map((clip, index) => (
-          <Clipboard key={index} clip={clip} />
-        ))}
-      </Stack>
-    </>
-  );
+  return null;
 }
