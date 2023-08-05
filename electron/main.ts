@@ -100,6 +100,7 @@ app
     const quit = new MenuItem({
       label: "Quit",
       click: app.quit,
+      accelerator: "CommandOrControl+Q",
     });
     const separator = new MenuItem({
       type: "separator",
@@ -108,16 +109,26 @@ app
       label: "Clear",
       click: () => win?.webContents.send(CHANNEL.CLIPBOARD_CLEARED),
     });
+    const about = new MenuItem({
+      label: "About",
+      submenu: Menu.buildFromTemplate([
+        new MenuItem({ label: "Application: Copy Zen v1.0.0", enabled: false }),
+        new MenuItem({ label: "Version: v1.0.0", enabled: false }),
+        new MenuItem({ label: "Author: Nguyen Cong Cuong", enabled: false }),
+        new MenuItem({ label: "Email: hi@cuongnc.dev", enabled: false }),
+      ]),
+    });
 
     // Initialize Tray with stored clipboard from bear store. Run on app start.
     ipcMain.on(CHANNEL.TRAY_INITIALIZATION, (_event, clips: Clip[]) => {
-      const clipItems = clips.map((clip) => {
+      const clipItems = clips.map((clip, index) => {
         return new MenuItem({
           id: clip.id,
           label:
             clip.content.length >= 50
               ? clip.content.slice(0, 50).trim() + "..."
               : clip.content,
+          accelerator: `CommandOrControl+${index + 1}`,
           click: () => clipboard.writeText(clip.content.trim()),
         });
       });
@@ -130,6 +141,8 @@ app
         clear,
         separator,
         quit,
+        separator,
+        about,
       ]);
       tray.setContextMenu(menu);
     });
