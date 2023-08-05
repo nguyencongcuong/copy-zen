@@ -25,7 +25,7 @@ export const useBearStore = create(
     persist<State & Actions>(
       (set) => ({
         clips: [],
-        maxClips: 10,
+        maxClips: 20,
         addClip: (clip: Clip, maxClips: number) =>
           set((state) => {
             clip = {
