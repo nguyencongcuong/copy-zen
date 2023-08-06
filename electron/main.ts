@@ -1,13 +1,4 @@
-import {
-  app,
-  BrowserWindow,
-  clipboard,
-  ipcMain,
-  Menu,
-  MenuItem,
-  nativeImage,
-  Tray,
-} from "electron";
+import { app, BrowserWindow, clipboard, ipcMain, Menu, MenuItem, nativeImage, Tray } from "electron";
 import path from "node:path";
 import ClipboardService from "../src/components/Clipboards/clipboards.service.ts";
 import { Clip } from "../src/components/Clipboards/clipboards.interface.ts";
@@ -83,9 +74,14 @@ app
     let menu: Menu;
 
     // Create tray icon in the top right corner of the screen
-    const iconPath = path.join(process.env.PUBLIC, "tray_icon_16x16.png");
+    const iconPath = path.join(process.env.PUBLIC, "tray.png");
     const icon = nativeImage.createFromPath(iconPath);
-    tray = new Tray(icon);
+
+    tray = new Tray(icon.resize({
+      width: 16,
+      height: 16
+    }));
+
     tray.setToolTip("Clippy");
 
     // Create default menu items
@@ -113,9 +109,7 @@ app
       label: "About",
       submenu: Menu.buildFromTemplate([
         new MenuItem({ label: "Application: Copy Zen", enabled: false }),
-        new MenuItem({ label: "Version: v1.0.0", enabled: false }),
-        new MenuItem({ label: "Author: Nguyen Cong Cuong", enabled: false }),
-        new MenuItem({ label: "Email: hi@cuongnc.dev", enabled: false }),
+        new MenuItem({ label: "Version: v1.1.0", enabled: false }),
       ]),
     });
 

@@ -2,5 +2,6 @@
 - `npm run dev`
 - `npm run build`
 
-### Logo
-https://www.flaticon.com/free-icon/clipboard_8556161?k=1691244293000
+### Resources
+#### Tray Icon:
+https://www.flaticon.com/free-icon/clipboard_721532?term=clipboard&page=1&position=16&origin=search&related_id=721532
