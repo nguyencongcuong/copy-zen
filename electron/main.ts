@@ -103,14 +103,8 @@ app
     });
     const clear = new MenuItem({
       label: "Clear",
+      accelerator: "CommandOrControl+R",
       click: () => win?.webContents.send(CHANNEL.CLIPBOARD_CLEARED),
-    });
-    const about = new MenuItem({
-      label: "About",
-      submenu: Menu.buildFromTemplate([
-        new MenuItem({ label: "Application: Copy Zen", enabled: false }),
-        new MenuItem({ label: "Version: v1.1.0", enabled: false }),
-      ]),
     });
 
     let preferences: MenuItem;
@@ -128,6 +122,13 @@ app
               click: () => win?.webContents.send(CHANNEL.MAX_CLIPS_UPDATE, item),
             })
           ))
+        }),
+        new MenuItem({
+          label: "About",
+          submenu: Menu.buildFromTemplate([
+            new MenuItem({ label: "Application: Copy Zen", enabled: false }),
+            new MenuItem({ label: "Version: v1.1.0", enabled: false }),
+          ]),
         })
       ])
     });
@@ -163,7 +164,6 @@ app
         separator,
         quit,
         separator,
-        about,
       ]);
       tray.setContextMenu(menu);
     });
