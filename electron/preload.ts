@@ -1,9 +1,4 @@
-import {
-  clipboard,
-  contextBridge,
-  ipcRenderer,
-  IpcRendererEvent,
-} from "electron";
+import { clipboard, contextBridge, ipcRenderer, IpcRendererEvent } from "electron";
 import { Clip } from "../src/components/Clipboards/clipboards.interface.ts";
 import { CHANNEL } from "./channel.ts";
 
@@ -20,4 +15,8 @@ contextBridge.exposeInMainWorld("electron", {
   initializeTray: (clips: Clip[]) => {
     ipcRenderer.send(CHANNEL.TRAY_INITIALIZATION, clips);
   },
+
+  syncMaxClips: (max: number) => {
+    ipcRenderer.send(CHANNEL.MAX_CLIPS, max);
+  }
 });

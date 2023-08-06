@@ -113,6 +113,31 @@ app
       ]),
     });
 
+    let preferences: MenuItem;
+
+    const syncPreferences = (maxClips: number) => new MenuItem({
+      label: "Preferences",
+      submenu: Menu.buildFromTemplate([
+        new MenuItem({
+          label: "Number of Clips",
+          submenu: Menu.buildFromTemplate([10, 20, 30, 40, 50, 60, 70, 80, 90].map((item) =>
+            new MenuItem({
+              label: String(item),
+              type: "radio",
+              checked: item === maxClips,
+              click: () => win?.webContents.send(CHANNEL.MAX_CLIPS_UPDATE, item),
+            })
+          ))
+        })
+      ])
+    });
+
+    preferences = syncPreferences(20);
+
+    ipcMain.on(CHANNEL.MAX_CLIPS, (_event, max) => {
+      preferences = syncPreferences(max);
+    })
+
     // Initialize Tray with stored clipboard from bear store. Run on app start.
     ipcMain.on(CHANNEL.TRAY_INITIALIZATION, (_event, clips: Clip[]) => {
       const clipItems = clips.map((clip, index) => {
@@ -131,6 +156,8 @@ app
         clipItems.length ? hint1 : hint2,
         separator,
         ...clipItems,
+        separator,
+        preferences,
         separator,
         clear,
         separator,
