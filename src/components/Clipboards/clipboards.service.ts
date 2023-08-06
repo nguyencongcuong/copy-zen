@@ -1,7 +1,9 @@
+import _ from "lodash";
+
 class ClipboardsService {
   public create(content: string) {
     return {
-      id: Math.random(),
+      id: _.uniqueId(),
       content: content.trim(),
       created_at: new Date().toISOString(),
     };

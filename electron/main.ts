@@ -63,7 +63,7 @@ app
           currentClipboardText !== previousClipboardText
         ) {
           const clip = ClipboardService.create(currentClipboardText);
-          if (win) win.webContents.send(CHANNEL.CLIPBOARD_UPDATED, clip);
+          win?.webContents.send(CHANNEL.CLIPBOARD_UPDATED, clip);
           clipboard.writeText(clip.content);
           previousClipboardText = currentClipboardText;
         }
@@ -119,7 +119,7 @@ app
               label: String(item),
               type: "radio",
               checked: item === maxClips,
-              click: () => win?.webContents.send(CHANNEL.MAX_CLIPS_UPDATE, item),
+              click: () => win?.webContents.send(CHANNEL.MAX_UPDATE, item),
             })
           ))
         }),
@@ -135,12 +135,12 @@ app
 
     preferences = syncPreferences(20);
 
-    ipcMain.on(CHANNEL.MAX_CLIPS, (_event, max) => {
+    ipcMain.on(CHANNEL.MAX, (_event, max) => {
       preferences = syncPreferences(max);
     })
 
     // Initialize Tray with stored clipboard from bear store. Run on app start.
-    ipcMain.on(CHANNEL.TRAY_INITIALIZATION, (_event, clips: Clip[]) => {
+    ipcMain.on(CHANNEL.CLIPBOARD_PROCESS, (_event, clips: Clip[]) => {
       const clipItems = clips.map((clip, index) => {
         return new MenuItem({
           id: clip.id,

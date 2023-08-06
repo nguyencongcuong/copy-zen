@@ -12,11 +12,11 @@ contextBridge.exposeInMainWorld("electron", {
     clipboard.writeText(text.trim());
   },
 
-  initializeTray: (clips: Clip[]) => {
-    ipcRenderer.send(CHANNEL.TRAY_INITIALIZATION, clips);
+  processClipboard: (clips: Clip[]) => {
+    ipcRenderer.send(CHANNEL.CLIPBOARD_PROCESS, clips);
   },
 
   syncMaxClips: (max: number) => {
-    ipcRenderer.send(CHANNEL.MAX_CLIPS, max);
+    ipcRenderer.send(CHANNEL.MAX, max);
   }
 });

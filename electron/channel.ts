@@ -1,7 +1,7 @@
 export const CHANNEL = {
-  TRAY_INITIALIZATION: "tray-initialization",
+  CLIPBOARD_PROCESS: "clipboard-process",
   CLIPBOARD_UPDATED: "clipboard-updated",
   CLIPBOARD_CLEARED: "clipboard-clear",
-  MAX_CLIPS: "max-clips",
-  MAX_CLIPS_UPDATE: "max-clips-update",
+  MAX: "max",
+  MAX_UPDATE: "max-update",
 };

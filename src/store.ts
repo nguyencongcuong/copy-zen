@@ -1,40 +1,36 @@
-import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { createWithEqualityFn } from "zustand/traditional";
 import _ from "lodash";
-
-interface Clip {
-  id: string;
-  content: string;
-  created_at: string;
-}
+import { Clip } from "./components/Clipboards/clipboards.interface.ts";
 
 interface State {
   clips: Clip[];
-  maxClips: number;
+  max: number;
 }
 
 interface Actions {
-  addClip: (clip: Clip) => void;
-  resetClips: () => void;
-  setMaxClips: (number: number) => void;
+  add: (clip: Clip) => void;
+  clear: () => void;
+  setMax: (number: number) => void;
 }
 
-export const useBearStore = create(
+export const useStore = createWithEqualityFn(
   persist<State & Actions>(
     (set) => ({
       clips: [],
-      maxClips: 20,
-      addClip: (clip: Clip) =>
+      max: 20,
+      add: (clip: Clip) =>
         set((state) => {
-          const newClips = _.slice(_.uniqBy([clip, ...state.clips], (clip) => clip.content), 0, state.maxClips);
+          const newClips = _.slice(_.uniqBy([clip, ...state.clips], (clip) => clip.content), 0, state.max);
           return ({ clips: newClips });
         }),
-      resetClips: () => set(() => ({ clips: [] })),
-      setMaxClips: (number: number) => set(() => ({ maxClips: number }))
+      clear: () => set(() => ({ clips: [] })),
+      setMax: (number: number) => set(() => ({ max: number }))
     }),
     {
       name: "clipboard",
       storage: createJSONStorage(() => localStorage)
     }
-  )
+  ),
+  Object.is
 );

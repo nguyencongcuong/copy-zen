@@ -1,4 +1,4 @@
-import { Clipboards } from "./components";
+import { Clipboards } from "./components/Clipboards/clipboards.component.tsx";
 
 function App() {
   return <Clipboards />
