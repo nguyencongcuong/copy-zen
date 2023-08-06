@@ -1,13 +1,7 @@
-import { Clipboards, Settings } from "./components";
-import { Container } from "@mui/material";
+import { Clipboards } from "./components";
 
 function App() {
-  return (
-    <Container>
-      <Clipboards />
-      <Settings />
-    </Container>
-  );
+  return <Clipboards />
 }
 
 export default App;

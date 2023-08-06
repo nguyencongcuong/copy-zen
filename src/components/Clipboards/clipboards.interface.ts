@@ -3,7 +3,3 @@ export interface Clip {
   content: string;
   created_at: string;
 }
-
-export interface ClipboardProps {
-  clip: Clip;
-}
