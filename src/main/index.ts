@@ -41,7 +41,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    // mainWindow.show()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -103,31 +103,6 @@ app
     tray = new Tray(darkTrayIcon)
 
     // Step 2: Define menu items
-    const MENU = {
-      HINT_1: new MenuItem({
-        label: 'Select the clip you would like to copy',
-        enabled: false
-      }),
-      HINT_2: new MenuItem({
-        label: 'Your clippings will appear here...',
-        enabled: false
-      }),
-      SEPARATOR: new MenuItem({
-        type: 'separator'
-      }),
-      QUIT: new MenuItem({
-        label: 'Quit',
-        accelerator: 'CommandOrControl+Q',
-        click: (): void => app.quit()
-      }),
-      CLEAR: new MenuItem({
-        label: 'Clear',
-        accelerator: 'CommandOrControl+R',
-        click: (): void => mainWindow?.webContents.send('clipboard-clear')
-      })
-    }
-    let preferences: MenuItem
-
     const syncPreferences = (maxClips: number): MenuItem =>
       new MenuItem({
         label: 'Preferences',
@@ -156,6 +131,34 @@ app
         ])
       })
 
+    const MENU = {
+      HINT_1: new MenuItem({
+        label: 'Select the clip you would like to copy',
+        enabled: false
+      }),
+      HINT_2: new MenuItem({
+        label: 'Your clippings will appear here...',
+        enabled: false
+      }),
+      SEPARATOR: new MenuItem({
+        type: 'separator'
+      }),
+      QUIT: new MenuItem({
+        label: 'Quit',
+        accelerator: 'CommandOrControl+Q',
+        click: (): void => app.quit()
+      }),
+      CLEAR: new MenuItem({
+        label: 'Clear',
+        accelerator: 'CommandOrControl+R',
+        click: (): void => mainWindow?.webContents.send('clipboard-clear')
+      })
+    }
+
+    let preferences: MenuItem
+
+    preferences = syncPreferences(20)
+
     // Step 3: Listen to theme color and update tray icon
     nativeTheme.on('updated', () => {
       if (nativeTheme.shouldUseDarkColors) {
@@ -167,9 +170,7 @@ app
 
     // Step 4: Initialize Tray with stored clipboard from bear store. Run on app start.
     ipcMain.on('clipboard-process', (_event, clips: Clip[]) => {
-      preferences = syncPreferences(20)
       ipcMain.on('max', (_event, max) => {
-        console.log('maximum number of clips has been changed: ', max)
         preferences = syncPreferences(max)
       })
 
@@ -178,7 +179,7 @@ app
           id: clip.id,
           label:
             clip.content.length >= 50 ? clip.content.slice(0, 50).trim() + '...' : clip.content,
-          accelerator: `CommandOrControl+${index + 1}`,
+          accelerator: `CommandOrControl+${ index + 1 }`,
           click: (): void => clipboard.writeText(clip.content.trim())
         })
       })
